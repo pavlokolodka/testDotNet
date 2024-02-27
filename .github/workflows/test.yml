@@ -1,0 +1,29 @@
+# This is a basic workflow to help you get started with Actions
+name: CI
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  check_files:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: List all files in the repository
+        run: |
+          find . -type f > all_files.txt
+          cat all_files.txt
+
+      - name: Check for required .NET source file
+        run: |
+          if grep -Fxq "./WinFormsControlLibrary1/DistanceConverter.cs" all_files.txt; then
+            echo "Required .NET source file is present."
+          else
+            echo "Error: Missing required .NET source file."
+            exit 1
+          fi
+
